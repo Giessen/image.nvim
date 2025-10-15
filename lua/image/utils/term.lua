@@ -33,6 +33,23 @@ local update_size = function()
   local sz = ffi.new("winsize")
   assert(ffi.C.ioctl(1, TIOCGWINSZ, sz) == 0, "Failed to get terminal size")
 
+  -- @ADDED. Fallback if pixel dimensions zero or invalid
+  if sz.xpixel == 0 or sz.ypixel == 0 or cell_width == 0 or cell_height == 0 then
+    -- use typical terminal font size fallback
+    cell_width = 8
+    cell_height = 16
+
+    cached_size = {
+      screen_x = (sz.xpixel > 0) and sz.xpixel or (sz.col * cell_width),
+      screen_y = (sz.ypixel > 0) and sz.ypixel or (sz.row * cell_height),
+      screen_cols = sz.col,
+      screen_rows = sz.row,
+      cell_width = cell_width,
+      cell_height = cell_height,
+    }
+    return
+  end
+
   cached_size = {
     screen_x = sz.xpixel,
     screen_y = sz.ypixel,
