@@ -314,7 +314,7 @@ local render = function(image)
       end
     else
       absolute_x = screen_pos.col - 1
-      absolute_y = screen_pos.row
+      absolute_y = screen_pos.row --+ 1 -- @ADDED '+1' to clear top line for showing indication message. 
     end
     -- apply render_offset_top offset if set (but not for floating windows and not during partial scroll)
     local is_floating = window and window.is_floating or false
